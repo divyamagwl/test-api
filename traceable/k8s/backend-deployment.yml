@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: traceable-backend-deployment
+  labels:
+    app: traceable-backend-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: traceable-backend-deployment
+  template:
+    metadata:
+      labels:
+        app: traceable-backend-deployment
+    spec:
+      containers:
+      - name: traceable-backend
+        image: divyamagwl/traceable:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8000
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: invoicy-backend-service
+spec:
+  selector:
+    app: traceable-backend-deployment
+  type: LoadBalancer
+  loadBalancerIP: "0.0.0.0"
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+      nodePort: 30000
